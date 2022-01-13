@@ -6,6 +6,7 @@ import { ChannelsModule } from './channels/channels.module';
 import { configValidationSchema } from 'config.schema';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     }),
     VideosModule,
     ChannelsModule,
+    FilesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

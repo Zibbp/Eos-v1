@@ -1,79 +1,86 @@
-import { Channel } from "src/channels/entities/channel.entity";
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Channel } from 'src/channels/entities/channel.entity';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Entity({name: 'videos'})
+@Entity({ name: 'videos' })
 export class Video {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({unique: true})
+  @Column({ unique: true })
   friendlyId: string;
 
   @ManyToOne(() => Channel, (channel) => channel.videos)
   channel: Channel;
 
-  @Column({nullable: false})
+  @Column({ nullable: false })
   title: string;
 
   @Column({ nullable: true })
   description: string;
 
   @Column({ nullable: false })
-  rootPath: string
+  rootPath: string;
 
   @Column({ nullable: true })
-  infoPath: string
-  
-  @Column({ nullable: false })
-  videoPath: string
+  infoPath: string;
 
   @Column({ nullable: false })
-  thumbnailPath: string
-
-  @Column({ nullable: true })
-  subtitlesPath: string
-
-  @Column({ nullable: true })
-  generatedSubtitlesPath: string
-
-  @Column({ nullable: true })
-  uploader: string
+  videoPath: string;
 
   @Column({ nullable: false })
-  duration: number
+  thumbnailPath: string;
+
+  @Column({ nullable: true })
+  subtitlesPath: string;
+
+  @Column({ nullable: true })
+  generatedSubtitlesPath: string;
+
+  @Column({ nullable: true })
+  uploader: string;
 
   @Column({ nullable: false })
-  viewCount: number
+  duration: number;
 
   @Column({ nullable: false })
-  uploadDate: Date
+  viewCount: number;
+
+  @Column({ nullable: false })
+  uploadDate: Date;
 
   @Column({ nullable: true })
-  likeCount: number
+  likeCount: number;
 
   @Column({ nullable: true })
-  dislikeCount: number
+  dislikeCount: number;
 
   @Column({ nullable: true })
-  resolution: string
+  resolution: string;
 
   @Column({ nullable: true })
-  fps: number
+  fps: number;
 
   @Column({ nullable: true })
-  vcodec: string
+  vcodec: string;
 
   @Column({ nullable: true })
-  acodec: string
+  acodec: string;
 
   @Column({ nullable: true })
-  abr: number
+  abr: string;
 
   @Column({ nullable: true })
-  format: string
+  format: string;
 
   @Column({ nullable: true })
-  commentCount: number
+  commentCount: number;
 
   @CreateDateColumn()
   createdAt: Date;

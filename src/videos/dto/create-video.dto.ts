@@ -1,86 +1,86 @@
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateVideoDto {
-    @IsString()
-    friendlyId: string;
+  @IsString()
+  friendlyId: string;
 
-    @IsString()
-    channel: string;
+  @IsString()
+  channel: string;
 
-    @IsString()
-    title: string
+  @IsString()
+  title: string;
 
-    @IsString()
-    @IsOptional()
-    description: string
+  @IsString()
+  @IsOptional()
+  description: string;
 
-    @IsString()
-    rootPath: string
+  @IsString()
+  rootPath: string;
 
-    @IsString()
-    @IsOptional()
-    infoPath: string
+  @IsString()
+  @IsOptional()
+  infoPath: string;
 
-    @IsString()
-    videoPath: string
+  @IsString()
+  videoPath: string;
 
-    @IsString()
-    thumbnailPath: string
+  @IsString()
+  thumbnailPath: string;
 
-    @IsString()
-    @IsOptional()
-    subtitlesPath: string
+  @IsString()
+  @IsOptional()
+  subtitlesPath: string;
 
-    @IsString()
-    @IsOptional()
-    generatedSubtitlesPath: string
+  @IsString()
+  @IsOptional()
+  generatedSubtitlesPath: string;
 
-    @IsString()
-    @IsOptional()
-    uploader: string
+  @IsString()
+  @IsOptional()
+  uploader: string;
 
-    @IsNumber()
-    duration: number
+  @IsNumber()
+  duration: number;
 
-    @IsNumber()
-    viewCount: number
+  @IsNumber()
+  viewCount: number;
 
-    @IsString()
-    uploadDate: Date
+  @IsString()
+  uploadDate: Date;
 
-    @IsNumber()
-    @IsOptional()
-    likeCount: number
+  @IsNumber()
+  @IsOptional()
+  likeCount: number;
 
-    @IsNumber()
-    @IsOptional()
-    dislikeCount: number
+  @IsNumber()
+  @IsOptional()
+  dislikeCount: number;
 
-    @IsString()
-    @IsOptional()
-    resolution: string
+  @IsString()
+  @IsOptional()
+  resolution: string;
 
-    @IsNumber()
-    @IsOptional()
-    fps: number
+  @IsNumber()
+  @IsOptional()
+  fps: number;
 
-    @IsString()
-    @IsOptional()
-    vcodec: string
+  @IsString()
+  @IsOptional()
+  vcodec: string;
 
-    @IsString()
-    @IsOptional()
-    acodec: string
+  @IsString()
+  @IsOptional()
+  acodec: string;
 
-    @IsNumber()
-    @IsOptional()
-    abr: number
+  @IsString()
+  @IsOptional()
+  abr: string;
 
-    @IsString()
-    @IsOptional()
-    format: string
+  @IsString()
+  @IsOptional()
+  format: string;
 
-    @IsNumber()
-    @IsOptional()
-    commentCount: number
+  @IsNumber()
+  @IsOptional()
+  commentCount: number;
 }

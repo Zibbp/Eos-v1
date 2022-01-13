@@ -28,6 +28,11 @@ export class VideosController {
     }
   }
 
+  @Get('/ids')
+  getAllVideoIds() {
+    return this.videosService.getAllVideoIds();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.videosService.findOne(+id);

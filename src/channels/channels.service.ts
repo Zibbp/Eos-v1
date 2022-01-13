@@ -19,7 +19,7 @@ import {
 @Injectable()
 export class ChannelsService {
   private logger = new Logger('ChannelsService');
-  constructor(private channelsRepository: ChannelsRepository) { }
+  constructor(private channelsRepository: ChannelsRepository) {}
   async create(createChannelDto: CreateChannelDto) {
     try {
       const channel = new Channel();
@@ -67,26 +67,36 @@ export class ChannelsService {
 
   async findOneById(id: string) {
     try {
-      const channel = await this.channelsRepository.findOneOrFail({
-        where: [
-          { id: id },
-        ]
-      })
-      return channel
+      const channel = await this.channelsRepository
+        .createQueryBuilder('channel')
+        .where('channel.id = :id', { id: id })
+        .loadRelationCountAndMap(
+          'channel.videoCount',
+          'channel.videos',
+          'video',
+        )
+        .getOneOrFail();
+
+      return channel;
     } catch (error) {
-      throw new NotFoundException('Channel not found')
+      throw new NotFoundException('Channel not found');
     }
   }
   async findOneByName(name: string) {
     try {
-      const channel = await this.channelsRepository.findOneOrFail({
-        where: [
-          { name: name },
-        ]
-      })
-      return channel
+      const channel = await this.channelsRepository
+        .createQueryBuilder('channel')
+        .where('channel.name = :name', { name: name })
+        .loadRelationCountAndMap(
+          'channel.videoCount',
+          'channel.videos',
+          'video',
+        )
+        .getOneOrFail();
+
+      return channel;
     } catch (error) {
-      throw new NotFoundException('Channel not found')
+      throw new NotFoundException('Channel not found');
     }
   }
 

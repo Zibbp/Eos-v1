@@ -37,11 +37,10 @@ export class ChannelsController {
   @Get(':id')
   findOne(@Param('id') id: string, @Query('name') name: string) {
     if (name) {
-      return this.channelsService.findOneByName(name)
+      return this.channelsService.findOneByName(name);
     } else {
       return this.channelsService.findOneById(id);
     }
-
   }
 
   @Patch(':id')
