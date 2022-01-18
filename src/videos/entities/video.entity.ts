@@ -16,7 +16,9 @@ export class Video {
   @Column({ unique: true })
   friendlyId: string;
 
-  @ManyToOne(() => Channel, (channel) => channel.videos)
+  @ManyToOne(() => Channel, (channel) => channel.videos, {
+    onDelete: 'CASCADE',
+  })
   channel: Channel;
 
   @Column({ nullable: false })
@@ -81,6 +83,12 @@ export class Video {
 
   @Column({ nullable: true })
   commentCount: number;
+
+  @Column('text', { array: true, nullable: true, default: '{}' })
+  tags: string[];
+
+  @Column('text', { array: true, nullable: true, default: '{}' })
+  categories: string[];
 
   @CreateDateColumn()
   createdAt: Date;

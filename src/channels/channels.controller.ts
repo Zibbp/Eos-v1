@@ -18,7 +18,7 @@ import { Pagination } from 'nestjs-typeorm-paginate';
 
 @Controller('channels')
 export class ChannelsController {
-  constructor(private readonly channelsService: ChannelsService) { }
+  constructor(private readonly channelsService: ChannelsService) {}
 
   @Post()
   create(@Body() createChannelDto: CreateChannelDto) {
@@ -30,7 +30,7 @@ export class ChannelsController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit = 20,
   ): Promise<Pagination<Channel>> {
-    limit = limit > 100 ? 100 : limit;
+    limit = limit > 999 ? 999 : limit;
     return this.channelsService.findAll({ page, limit });
   }
 

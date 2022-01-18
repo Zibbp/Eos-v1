@@ -19,7 +19,7 @@ export class Channel {
   @Column({ nullable: false })
   profileImagePath: string;
 
-  @OneToMany(() => Video, (video) => video.channel)
+  @OneToMany(() => Video, (video) => video.channel, { onDelete: 'CASCADE' })
   videos: Video[];
 
   @CreateDateColumn()

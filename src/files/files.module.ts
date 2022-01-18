@@ -6,10 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChannelsRepository } from 'src/channels/channels.repository';
 import { VideosRepository } from 'src/videos/videos.repository';
 import { VideosService } from 'src/videos/videos.service';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ChannelsRepository, VideosRepository])],
   controllers: [FilesController],
-  providers: [FilesService, ChannelsService, VideosService],
+  providers: [FilesService, ChannelsService, VideosService, ConfigService],
 })
 export class FilesModule {}

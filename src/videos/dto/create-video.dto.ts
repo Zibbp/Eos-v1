@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateVideoDto {
   @IsString()
@@ -83,4 +83,8 @@ export class CreateVideoDto {
   @IsNumber()
   @IsOptional()
   commentCount: number;
+
+  @IsArray()
+  @IsOptional()
+  tags: string[];
 }

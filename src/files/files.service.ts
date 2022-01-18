@@ -1,4 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Cron } from '@nestjs/schedule';
 import { dir } from 'console';
 import * as fs from 'fs';
 import { ChannelsService } from 'src/channels/channels.service';
@@ -19,7 +21,13 @@ export class FilesService {
   constructor(
     private channelsService: ChannelsService,
     private videosService: VideosService,
+    private configService: ConfigService,
   ) {}
+
+  // @Cron('* * * * *')
+  // handleCron() {
+  //   this.logger.log('cron');
+  // }
 
   async processChannels() {
     this.logger.log('[IMPORT] - Gathering Channels');
@@ -47,7 +55,7 @@ export class FilesService {
             );
             const createChannelDto: CreateChannelDto = {
               name: channelNameFromDir,
-              profileImagePath: `/mnt/videos/${cDir.name}/${cDir.name}.jpg`,
+              profileImagePath: `/${cDir.name}/${cDir.name}.jpg`,
             };
             const createChannel = await this.channelsService.create(
               createChannelDto,
@@ -111,6 +119,10 @@ export class FilesService {
   async process() {
     this.logger.log('[IMPORT] - Processing Channels and Videos');
     for await (const channel of channelVideoMap) {
+      this.logger.verbose(
+        `[IMPORT] - ${channel.name} - DB Video Count: ${channel.dbVideoCount} Dir Video Count: ${channel.videoDirs.length}`,
+      );
+
       // Check if video count in folder matches database, if so skip it
       if (channel.dbVideoCount === channel.videoDirs.length) {
         this.logger.log(
@@ -122,6 +134,7 @@ export class FilesService {
         for await (const videoDir of channel.videoDirs) {
           // Read all files in the directory
           const rootVidDir = `/mnt/videos/${channel.dirName}/${videoDir}`;
+          const relativeVidDir = `/${channel.dirName}/${videoDir}`;
           const filesInVideoDir = fs.readdirSync(rootVidDir);
           // eslint-disable-next-line prefer-const
           let videoObject = {
@@ -129,7 +142,7 @@ export class FilesService {
             channel: channel.id,
             title: null,
             description: null,
-            rootPath: rootVidDir,
+            rootPath: relativeVidDir,
             infoPath: null,
             videoPath: null,
             thumbnailPath: null,
@@ -148,6 +161,8 @@ export class FilesService {
             abr: null,
             format: null,
             commentCount: null,
+            tags: null,
+            categories: null,
           };
           // Loop through each file and process it
           for await (const fileInDir of filesInVideoDir) {
@@ -155,7 +170,7 @@ export class FilesService {
             const fileExt = fileInDir.substring(fileInDir.lastIndexOf('.'));
             // Get info json file
             if (fileExt == '.json' && fileInDir.includes('.info.json')) {
-              videoObject.infoPath = `${rootVidDir}/${fileInDir}`;
+              videoObject.infoPath = `${relativeVidDir}/${fileInDir}`;
               const rawInfoData = fs.readFileSync(`${rootVidDir}/${fileInDir}`);
               const videoInfoData = await JSON.parse(rawInfoData.toString());
               // Convert date string into date object
@@ -179,23 +194,25 @@ export class FilesService {
                 (videoObject.abr = videoInfoData.abr),
                 (videoObject.format = videoInfoData.format),
                 (videoObject.commentCount = videoInfoData.comment_count);
+              videoObject.tags = videoInfoData.tags;
+              videoObject.categories = videoInfoData.categories;
             }
             // Get thumbnail path
             if (fileExt == '.webp' || fileExt == '.jpg' || fileExt == '.png') {
-              videoObject.thumbnailPath = `${rootVidDir}/${fileInDir}`;
+              videoObject.thumbnailPath = `${relativeVidDir}/${fileInDir}`;
             }
             // Get video path
             if (fileExt == '.mkv' || fileExt == '.mp4' || fileExt == '.webm') {
               // Get video path
-              videoObject.videoPath = `${rootVidDir}/${fileInDir}`;
+              videoObject.videoPath = `${relativeVidDir}/${fileInDir}`;
             }
             // Get auto generated subtitles path
             if (fileExt == '.vtt' && fileInDir.includes('.en.vtt')) {
-              videoObject.generatedSubtitlesPath = `${rootVidDir}/${fileInDir}`;
+              videoObject.generatedSubtitlesPath = `${relativeVidDir}/${fileInDir}`;
             }
             // Get subtitles path
             if (fileExt == '.vtt' && fileInDir.includes('.en-US.vtt')) {
-              videoObject.subtitlesPath = `${rootVidDir}/${fileInDir}`;
+              videoObject.subtitlesPath = `${relativeVidDir}/${fileInDir}`;
             }
           }
           const check = dbVideoIds.find(
@@ -214,11 +231,13 @@ export class FilesService {
                 `[IMPORT] - Error inserting video in database`,
                 error,
               );
+              this.logger.verbose(`[IMPORT] - Error object:`, videoObject);
             }
           }
         }
       }
     }
+    this.logger.verbose('[IMPORT] Complete');
   }
 
   async importVideos() {
@@ -228,6 +247,7 @@ export class FilesService {
     await this.processChannels();
     await this.mapVideos();
     await this.getAllDbVideoIds();
-    await this.process();
+    this.process();
+    return { msg: 'Import started.' };
   }
 }

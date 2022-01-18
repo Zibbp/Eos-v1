@@ -7,6 +7,8 @@ import { configValidationSchema } from 'config.schema';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FilesModule } from './files/files.module';
+import { StatsModule } from './stats/stats.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -39,6 +41,8 @@ import { FilesModule } from './files/files.module';
     VideosModule,
     ChannelsModule,
     FilesModule,
+    StatsModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],
